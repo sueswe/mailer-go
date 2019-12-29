@@ -3,21 +3,36 @@ package main
 import (
     "fmt"
     "flag"
+    "os"
 )
 
+func usage(a int)  {
+	fmt.Println("Usage:", a)
+}
+
+func help() {
+	fmt.Println("Help:")
+}
+
 func main() {
-    fromPart    := flag.String("from","rz.om.stp@itsv.at","email-sender")
-    toPart      := flag.String("to", "rz.om.stp@itsv.at","email-recipient")
-    subjectPart := flag.String("subject", "no subject", "email-subject")
-    bodyPart    := flag.String("body", "(empty)" , "email-body")
-    attachPart  := flag.String("attachment", "none", "email-attachments")
+    fromPart    := flag.String("f","rz.om.stp@itsv.at","email-sender")
+    toPart      := flag.String("t", "rz.om.stp@itsv.at","email-recipient")
+    subjectPart := flag.String("s", "no subject", "email-subject")
+    bodyPart    := flag.String("b", "(empty)" , "email-body")
+    attachPart  := flag.String("a", "none", "email-attachments")
     flag.Parse()
-
-    fmt.Println("Sender: \t", *fromPart)
-    fmt.Println("Recipient: \t", *toPart)
-    fmt.Println("Subject: \t", *subjectPart)
-    fmt.Println("Body: \t\t", *bodyPart)
-    fmt.Println("Attachments: \t", *attachPart)
-
+    if *subjectPart == "no subject" {
+		//usage(5)
+		help()
+		os.Exit(1)
+	} else {
+		fmt.Println("Sender: \t", *fromPart)
+		fmt.Println("Recipient: \t", *toPart)
+		fmt.Println("Subject: \t", *subjectPart)
+		fmt.Println("Body: \t\t", *bodyPart)
+		fmt.Println("Attachments: \t", *attachPart)
+	}
 
 }
+
+
