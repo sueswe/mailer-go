@@ -21,7 +21,7 @@ func main() {
     bodyPart    := flag.String("b", "(empty)" , "email-body")
     attachPart  := flag.String("a", "none", "email-attachments")
     flag.Parse()
-    if *subjectPart == "no subject" {
+    if *subjectPart == "no subject" || *bodyPart == "(empty)" {
 		//usage(5)
 		help()
 		os.Exit(1)
@@ -32,6 +32,7 @@ func main() {
 		fmt.Println("Body: \t\t", *bodyPart)
 		fmt.Println("Attachments: \t", *attachPart)
 	}
+	
 
 }
 
