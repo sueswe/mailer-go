@@ -4,6 +4,8 @@ import (
     "flag"
     "fmt"
     "os"
+    //"crypto/tls"
+    "gopkg.in/gomail.v2"
 )
 
 func usage(a int) {
@@ -11,7 +13,21 @@ func usage(a int) {
 }
 
 func help() {
-    fmt.Println("Help:")
+    fmt.Println("Help: ")
+    fmt.Println("    mailer -f sender -t recipient -s subject -b body/message -a attachments \n")
+}
+
+func mailing() {
+    m := gomail.NewMessage()
+    m.SetHeader("From", "werner.suess@itsv.at")
+    m.SetHeader("To", "werner.suess@itsv.at")
+    m.SetHeader("Subject", "Hello, just a test")
+    m.SetBody("text/plain", "Ahoihoi!")
+
+    d := gomail.Dialer{Host: "viruswall.sozvers.at", Port: 25}
+    if err := d.DialAndSend(m); err != nil {
+        panic(err)
+    }
 }
 
 func main() {
@@ -32,4 +48,5 @@ func main() {
         fmt.Println("Body: \t\t", *bodyPart)
         fmt.Println("Attachments: \t", *attachPart)
     }
+    mailing()
 }
