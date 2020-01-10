@@ -6,6 +6,7 @@ import (
     "os"
     //"crypto/tls"
     "gopkg.in/gomail.v2"
+    "strings"
 )
 
 func usage(a int) {
@@ -14,15 +15,16 @@ func usage(a int) {
 
 func help() {
     fmt.Println("Help: ")
-    fmt.Println("    mailer -f sender -t recipient -s subject -b body/message -a attachments \n")
+    fmt.Println("\tmailer [-f sender] [-t recipient] -s subject -b body/message [-a attachments] \n")
+    fmt.Println("\tDefault sender and recipient is: rz.om.stp@itsv.at\n")
 }
 
-func mailing() {
+func mailer_single(from , to, subject, body , file string) {
     m := gomail.NewMessage()
-    m.SetHeader("From", "werner.suess@itsv.at")
-    m.SetHeader("To", "werner.suess@itsv.at")
-    m.SetHeader("Subject", "Hello, just a test")
-    m.SetBody("text/plain", "Ahoihoi!")
+    m.SetHeader("From", from)
+    m.SetHeader("To", to)
+    m.SetHeader("Subject", subject)
+    m.SetBody("text/plain", body)
 
     d := gomail.Dialer{Host: "viruswall.sozvers.at", Port: 25}
     if err := d.DialAndSend(m); err != nil {
@@ -48,5 +50,12 @@ func main() {
         fmt.Println("Body: \t\t", *bodyPart)
         fmt.Println("Attachments: \t", *attachPart)
     }
-    mailing()
+    toSlice := strings.Split(*toPart, ",")
+    for _, adress := range toSlice {
+        fmt.Println("recipient:", adress)
+        mailer_single(*fromPart, adress, *subjectPart, *bodyPart, *attachPart)
+    }
+
+
+    
 }
