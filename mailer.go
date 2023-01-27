@@ -13,7 +13,7 @@ import (
 func help() {
     color.Yellow("Usage: ")
     fmt.Println("mailer [-f sender] [-t recipient,recipient] -s subject -b body/message [-a attachments] ")
-    fmt.Print("\nDefault sender and recipient is: ") 
+    fmt.Print("\nDefault sender and recipient is: ")
     color.Cyan("rz.om.stp@itsv.at")
 }
 
@@ -40,7 +40,7 @@ func main() {
     flag.Parse()
     if *subjectPart == "no subject" || *bodyPart == "(empty)" {
         //usage(5)
-        color.Red("\nI'm missing something, take a look at:")
+        color.Red("I'm missing something, take a look at:")
         help()
         print("\n");
         os.Exit(1)
