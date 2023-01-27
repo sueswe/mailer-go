@@ -7,16 +7,14 @@ import (
     //"crypto/tls"
     "gopkg.in/gomail.v2"
     "strings"
+    "github.com/fatih/color"
 )
 
-func usage(a int) {
-    fmt.Println("Usage:", a)
-}
-
 func help() {
-    fmt.Println("Usage: ")
-    fmt.Println("\nmailer [-f sender] [-t recipient] -s subject -b body/message [-a attachments] ")
-    fmt.Println("\nDefault sender and recipient is: rz.om.stp@itsv.at\n")
+    color.Yellow("Usage: ")
+    fmt.Println("mailer [-f sender] [-t recipient,recipient] -s subject -b body/message [-a attachments] ")
+    fmt.Print("\nDefault sender and recipient is: ") 
+    color.Cyan("rz.om.stp@itsv.at")
 }
 
 func mailer_single(from , to, subject, body , file string) {
@@ -28,6 +26,7 @@ func mailer_single(from , to, subject, body , file string) {
 
     d := gomail.Dialer{Host: "viruswall.sozvers.at", Port: 25}
     if err := d.DialAndSend(m); err != nil {
+        color.Red("\nWhoops, that didn't work, pal!")
         panic(err)
     }
 }
@@ -41,7 +40,9 @@ func main() {
     flag.Parse()
     if *subjectPart == "no subject" || *bodyPart == "(empty)" {
         //usage(5)
+        color.Red("\nI'm missing something, take a look at:")
         help()
+        print("\n");
         os.Exit(1)
     } else {
         fmt.Println("Sender: \t", *fromPart)
@@ -55,7 +56,4 @@ func main() {
         fmt.Println("recipient:", adress)
         mailer_single(*fromPart, adress, *subjectPart, *bodyPart, *attachPart)
     }
-
-
-    
 }
