@@ -14,9 +14,9 @@ func usage(a int) {
 }
 
 func help() {
-    fmt.Println("Help: ")
-    fmt.Println("\tmailer [-f sender] [-t recipient] -s subject -b body/message [-a attachments] \n")
-    fmt.Println("\tDefault sender and recipient is: rz.om.stp@itsv.at\n")
+    fmt.Println("Usage: ")
+    fmt.Println("\nmailer [-f sender] [-t recipient] -s subject -b body/message [-a attachments] ")
+    fmt.Println("\nDefault sender and recipient is: rz.om.stp@itsv.at\n")
 }
 
 func mailer_single(from , to, subject, body , file string) {
