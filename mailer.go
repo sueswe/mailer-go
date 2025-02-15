@@ -18,8 +18,6 @@ func help() {
 	fmt.Println("Usage: ")
 	fmt.Println("mailer [-f sender] [-d] [-t recipient,recipient] -s subject -b message [-a attachment] ")
 	fmt.Println("\n -> use -h for more help!")
-	//fmt.Print("\nDefault sender and recipient is: ")
-	//color.Cyan("rz.om.stp@itsv.at")
 }
 
 func details() {
@@ -30,6 +28,8 @@ func details() {
 }
 
 func main() {
+
+	log.Print("mailer, Version 0.1")
 
 	showDetails := flag.Bool("d", false, "Show default configuration settings.")
 
@@ -49,11 +49,10 @@ func main() {
 		help()
 		os.Exit(1)
 	} else {
-		fmt.Println("Sender: \t", *fromPart)
-		fmt.Println("Recipient: \t", *toPart)
-		fmt.Println("Subject: \t", *subjectPart)
-		fmt.Println("Body: \t\t", *bodyPart)
-		fmt.Println("Attachments: \t", *attachPart)
+		log.Print("Sender: \t", *fromPart)
+		log.Print("Recipient: \t", *toPart)
+		log.Print("Subject: \t", *subjectPart)
+		log.Print("Body: \t", *bodyPart)
 	}
 
 	m := gomail.NewMessage()
@@ -68,14 +67,19 @@ func main() {
 	m.SetHeader("Subject", *subjectPart)
 	m.SetBody("text/plain", *bodyPart)
 
-	_, err := os.Stat(*attachPart)
-	if err == nil {
-		m.Attach(*attachPart)
+	if *attachPart == "(none)" {
+		log.Print("Attachment:\t", *attachPart)
 	} else {
-		log.Fatal("File not found.")
-		os.Exit(2)
+		_, err := os.Stat(*attachPart)
+		if err == nil {
+			m.Attach(*attachPart)
+		} else {
+			log.Fatal("File not found.")
+			os.Exit(2)
+		}
 	}
 
+	log.Print("Trying to send ...")
 	d := gomail.Dialer{Host: SMTPD, Port: 25}
 	if err := d.DialAndSend(m); err != nil {
 		log.Fatal("Sorry, that didn't work.")
