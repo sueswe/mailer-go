@@ -5,16 +5,17 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/fatih/color"
 	"gopkg.in/gomail.v2"
 )
 
 var SMTPD = "localhost"
-var SENDER = "sueswe@carbon"
+var SENDER = "sueswe@localhost"
 
 func help() {
-	color.Yellow("Usage: ")
+	fmt.Println("Usage: ")
 	fmt.Println("mailer [-f sender] [-d] [-t recipient,recipient] -s subject -b body/message [-a attachments] ")
 	fmt.Println("\n -> use -h for more help!")
 	//fmt.Print("\nDefault sender and recipient is: ")
@@ -22,24 +23,10 @@ func help() {
 }
 
 func details() {
-	fmt.Print("Default sender: ")
+	fmt.Print("Default sender:\t")
 	color.Cyan(SENDER)
-	fmt.Print("Default SMTPD: ")
+	fmt.Print("Default SMTPD:\t")
 	color.Cyan(SMTPD)
-}
-
-func mailer_single(from, to, subject, body, file string) {
-	m := gomail.NewMessage()
-	m.SetHeader("From", from)
-	m.SetHeader("To", to)
-	m.SetHeader("Subject", subject)
-	m.SetBody("text/plain", body)
-
-	d := gomail.Dialer{Host: SMTPD, Port: 25}
-	if err := d.DialAndSend(m); err != nil {
-		log.Fatal("\nWhoops, that didn't work, pal!")
-		panic(err)
-	}
 }
 
 func main() {
@@ -58,7 +45,7 @@ func main() {
 	}
 	if *subjectPart == "no subject" || *bodyPart == "(empty)" {
 		//usage(5)
-		color.Red("Sorry, I'm missing something.")
+		log.Fatal("Sorry, I'm missing something.")
 		help()
 		os.Exit(1)
 	} else {
@@ -69,15 +56,15 @@ func main() {
 		fmt.Println("Attachments: \t", *attachPart)
 	}
 
-	/*#toSlice := strings.Split(*toPart, ",")
-	#for _, adress := range toSlice {
-	#	fmt.Println("recipient:", adress)
-	#	mailer_single(*fromPart, adress, *subjectPart, *bodyPart, *attachPart)
-	#}*/
-
 	m := gomail.NewMessage()
+	toSlice := strings.Split(*toPart, ",")
+	addresses := make([]string, len(toSlice))
+	for i, adress := range toSlice {
+		addresses[i] = m.FormatAddress(adress, "")
+	}
+
 	m.SetHeader("From", *fromPart)
-	m.SetHeader("To", *toPart)
+	m.SetHeader("To", addresses...)
 	m.SetHeader("Subject", *subjectPart)
 	m.SetBody("text/plain", *bodyPart)
 
@@ -85,5 +72,7 @@ func main() {
 	if err := d.DialAndSend(m); err != nil {
 		log.Fatal("Whoops, that didn't work, pal!")
 		panic(err)
+	} else {
+		log.Print("DONE.")
 	}
 }
