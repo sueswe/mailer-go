@@ -16,7 +16,7 @@ var SENDER = "sueswe@localhost"
 
 func help() {
 	fmt.Println("Usage: ")
-	fmt.Println("mailer [-f sender] [-d] [-t recipient,recipient] -s subject -b body/message [-a attachments] ")
+	fmt.Println("mailer [-f sender] [-d] [-t recipient,recipient] -s subject -b message [-a attachment] ")
 	fmt.Println("\n -> use -h for more help!")
 	//fmt.Print("\nDefault sender and recipient is: ")
 	//color.Cyan("rz.om.stp@itsv.at")
@@ -68,11 +68,19 @@ func main() {
 	m.SetHeader("Subject", *subjectPart)
 	m.SetBody("text/plain", *bodyPart)
 
+	_, err := os.Stat(*attachPart)
+	if err == nil {
+		m.Attach(*attachPart)
+	} else {
+		log.Fatal("File not found.")
+		os.Exit(2)
+	}
+
 	d := gomail.Dialer{Host: SMTPD, Port: 25}
 	if err := d.DialAndSend(m); err != nil {
-		log.Fatal("Whoops, that didn't work, pal!")
+		log.Fatal("Sorry, that didn't work.")
 		panic(err)
 	} else {
-		log.Print("DONE.")
+		log.Print("done.")
 	}
 }
