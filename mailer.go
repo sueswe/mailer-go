@@ -12,11 +12,7 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-/*
-TODO: more attachments comma-seperated.
-*/
-
-var version string = "0.3.4"
+var version string = "0.3.5"
 
 var SMTPD string
 var SENDER string
@@ -24,13 +20,13 @@ var home string = os.Getenv("HOME")
 
 func help() {
 	fmt.Println("Usage: ")
-	fmt.Println("mailer [-f sender] [-d] [-t recipient,recipient] -s subject -b message [-a \"attachment*\"] ")
+	fmt.Println("mailer [-f sender] [-d] [-t recipient,recipient] -s subject -b message [-a \"attachment*,attachment\"] ")
 	fmt.Println("\n -> use -h for more help.")
 }
 
 func main() {
 
-	infoLog := log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
+	infoLog := log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime)
 	//warningLog := log.New(os.Stdout, "WARNING: ", log.Ldate|log.Ltime|log.Lshortfile)
 	errorLog := log.New(os.Stderr, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
 
@@ -44,7 +40,7 @@ func main() {
 	SMTPD := config.Get("default.SMTPD").(string)
 	SENDER := config.Get("default.SENDER").(string)
 	infoLog.Print("Mailserver: ", SMTPD)
-	infoLog.Print("Sender: ", SENDER)
+	// infoLog.Print("Defaultsender: ", SENDER)
 
 	fromPart := flag.String("f", SENDER, "email-sender.")
 	toPart := flag.String("t", SENDER, "email-recipient.")
@@ -58,7 +54,7 @@ func main() {
 		help()
 		os.Exit(2)
 	} else {
-		//log.Print("Sender: \t", *fromPart)
+		infoLog.Print("Sender: \t", *fromPart)
 		infoLog.Print("Recipient: \t", *toPart)
 		infoLog.Print("Subject: \t", *subjectPart)
 		infoLog.Print("Body: \t", *bodyPart)
@@ -82,29 +78,33 @@ func main() {
 	if *attachPart == "(none)" {
 		infoLog.Print("Attachment:\t", *attachPart)
 	} else {
-		//log.Print("globbing attachments: ", *attachPart)
-		filenames, err := filepath.Glob(*attachPart)
-		if err != nil {
-			errorLog.Print("glob-error")
-			os.Exit(2)
-		}
-		if len(filenames) == 0 {
-			errorLog.Print("Attachments-Glob ist leer.")
-			os.Exit(3)
-		}
-
-		// folgende for wird nie erreicht wenn attachments ohnehin leer sind
-		// (deshalb auch ein os:exit bei der Prüfung zuvor).
-		// Macht nur Sinn, wenn während der Ausführung ein file verschwindet:
-		for i, fname := range filenames {
-			_, error := os.Stat(fname)
-			// check if error is "file not exists"
-			if os.IsNotExist(error) {
-				errorLog.Print("file does not exist: ", fname)
-				os.Exit(5)
+		attSlice := strings.Split(*attachPart, ",")
+		for _, a := range attSlice {
+			//infoLog.Print("inhalt: ", a)
+			//log.Print("globbing attachments: ", *attachPart)
+			filenames, err := filepath.Glob(a)
+			if err != nil {
+				errorLog.Print("glob-error")
+				os.Exit(2)
 			}
-			infoLog.Print("Attaching file ", i, " ,is: ", fname)
-			m.Attach(fname)
+			if len(filenames) == 0 {
+				errorLog.Print("Attachments-Glob ist leer.")
+				os.Exit(3)
+			}
+
+			// folgende for wird nie erreicht wenn attachments ohnehin leer sind
+			// (deshalb auch ein os:exit bei der Prüfung zuvor).
+			// Macht nur Sinn, wenn während der Ausführung ein file verschwindet:
+			for i, fname := range filenames {
+				_, error := os.Stat(fname)
+				// check if error is "file not exists"
+				if os.IsNotExist(error) {
+					errorLog.Print("file does not exist: ", fname)
+					os.Exit(5)
+				}
+				infoLog.Print("Attaching file ", i, " ,is: ", fname)
+				m.Attach(fname)
+			}
 		}
 	}
 
