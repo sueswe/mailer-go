@@ -5,12 +5,16 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/fatih/color"
 	"gopkg.in/gomail.v2"
 )
 
+var version string = "0.2"
+
+// FIXME: config-file ($HOME/mailer.conf)
 var SMTPD = "localhost"
 var SENDER = "sueswe@localhost"
 
@@ -29,7 +33,7 @@ func details() {
 
 func main() {
 
-	log.Print("mailer, Version 0.1")
+	log.Print("mailer, Version ", version)
 
 	showDetails := flag.Bool("d", false, "Show default configuration settings.")
 
@@ -56,6 +60,7 @@ func main() {
 	}
 
 	m := gomail.NewMessage()
+
 	toSlice := strings.Split(*toPart, ",")
 	addresses := make([]string, len(toSlice))
 	for i, adress := range toSlice {
@@ -70,13 +75,17 @@ func main() {
 	if *attachPart == "(none)" {
 		log.Print("Attachment:\t", *attachPart)
 	} else {
-		_, err := os.Stat(*attachPart)
-		if err == nil {
-			m.Attach(*attachPart)
-		} else {
-			log.Fatal("File not found.")
-			os.Exit(2)
+
+		filenames, err := filepath.Glob(*attachPart)
+		if err != nil {
+			log.Fatal("Error globbing files.")
+			os.Exit(3)
 		}
+		for i, name := range filenames {
+			log.Print("Attaching file ", i, " ,is: ", name)
+			m.Attach(name)
+		}
+		//log.Print(filenames)
 	}
 
 	log.Print("Trying to send ...")
