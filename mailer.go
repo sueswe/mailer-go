@@ -16,7 +16,7 @@ import (
 TODO: more attachments comma-seperated.
 */
 
-var version string = "0.3.2"
+var version string = "0.3.3"
 
 var SMTPD string
 var SENDER string
@@ -84,7 +84,7 @@ func main() {
 	if *attachPart == "(none)" {
 		log.Print("Attachment:\t", *attachPart)
 	} else {
-		log.Print("globbing attachments: ", *attachPart)
+		//log.Print("globbing attachments: ", *attachPart)
 		filenames, err := filepath.Glob(*attachPart)
 		if err != nil {
 			log.Print("glob-error")
@@ -95,7 +95,7 @@ func main() {
 			os.Exit(3)
 		}
 		for i, fname := range filenames {
-			log.Print(fname)
+			//log.Print(fname)
 			_, error := os.Stat(fname)
 			// check if error is "file not exists"
 			if os.IsNotExist(error) {

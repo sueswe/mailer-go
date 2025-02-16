@@ -6,7 +6,7 @@ written in go language.
 ## Usage:
 
 ~~~sh
- mailer -f sender -t recipient -s subject -b body/message [-a "attachments"]
+ mailer -f sender -t recipient -s subject -b body/message [-a "attachment"]
 ~~~
 
   - -f: sender (optional)
