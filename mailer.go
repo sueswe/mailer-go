@@ -8,15 +8,19 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/fatih/color"
 	"github.com/pelletier/go-toml"
 	"gopkg.in/gomail.v2"
 )
 
-var version string = "0.3.1"
+/*
+TODO: more attachments comma-seperated.
+*/
+
+var version string = "0.3.2"
 
 var SMTPD string
 var SENDER string
+var home string = os.Getenv("HOME")
 
 func help() {
 	fmt.Println("Usage: ")
@@ -24,18 +28,11 @@ func help() {
 	fmt.Println("\n -> use -h for more help.")
 }
 
-func details() {
-	fmt.Print("Default sender:\t")
-	color.Cyan(SENDER)
-	fmt.Print("Default SMTPD:\t")
-	color.Cyan(SMTPD)
-}
-
 func main() {
 
 	log.Print("mailer, Version ", version)
 
-	config, err := toml.LoadFile("/home/sueswe/mailerconfig.toml")
+	config, err := toml.LoadFile(home + "/mailerconfig.toml")
 	if err != nil {
 		fmt.Println("Error ", err.Error())
 		panic(err)
@@ -45,7 +42,7 @@ func main() {
 	log.Print("Mailserver: ", SMTPD)
 	log.Print("Sender: ", SENDER)
 
-	showConfig := flag.Bool("c", false, "Show default configuration settings from configfile.")
+	//showConfig := flag.Bool("c", false, "Show default configuration settings from configfile.")
 	fromPart := flag.String("f", SENDER, "email-sender.")
 	toPart := flag.String("t", SENDER, "email-recipient.")
 	subjectPart := flag.String("s", "(no subject)", "email-subject.")
@@ -53,17 +50,17 @@ func main() {
 	attachPart := flag.String("a", "(none)", "email-attachments.")
 	flag.Parse()
 
-	if *showConfig == true {
-		details()
-		os.Exit(3)
-	}
+	//if *showConfig == true {
+	//	details()
+	//	os.Exit(3)
+	//}
 
 	if *subjectPart == "(no subject)" || *bodyPart == "(empty)" {
 		log.Print("Sorry, I'm missing a mandatory parameter.")
 		help()
 		os.Exit(2)
 	} else {
-		log.Print("Sender: \t", *fromPart)
+		//log.Print("Sender: \t", *fromPart)
 		log.Print("Recipient: \t", *toPart)
 		log.Print("Subject: \t", *subjectPart)
 		log.Print("Body: \t", *bodyPart)
