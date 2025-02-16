@@ -6,14 +6,14 @@ written in go language.
 ## Usage:
 
 ~~~sh
- mailer -f sender -t recipient -s subject -b body/message [-a "attachment"]
+ mailer -f sender -t recipient -s subject -b body/message [-a "attachment_a,attachm*,attachment_c"]
 ~~~
 
   - -f: sender (optional)
   - -t: (recipients):  foo@server,bar@domain
   - -s: subject
   - -b: message-body
-  - -a: (attachments): one file, wildcards allowd, like filenam*
+  - -a: (attachments): files, commaseperated, wildcards allowed, like filenam*
 
 
 ## Config-file:
