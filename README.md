@@ -1,5 +1,8 @@
 # mailer-go
 
+> [!IMPORTANT]
+> The project is in a process of heavy refactoring.
+
 An mailer tool for the CLI
 written in go language.
 
