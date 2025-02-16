@@ -9,8 +9,11 @@ written in go language.
  mailer -f sender -t recipient -s subject -b body/message [-a "attachments"]
 ~~~
 
--r: (recipients):  foo@server,bar@domain
--a: (attachments): one file, wildcards allowd, like filenam*
+  -f: sender (optional)
+  -t: (recipients):  foo@server,bar@domain
+  -s: subject
+  -b: message-body
+  -a: (attachments): one file, wildcards allowd, like filenam*
 
 
 ## Config-file:
