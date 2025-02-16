@@ -3,6 +3,8 @@
 An mailer tool for the CLI
 written in go language.
 
+![build workflow](https://github.com/sueswe/mailer-go/actions/workflows/go.yml/badge.svg?event=push)
+
 ## Usage:
 
 ~~~sh
