@@ -46,18 +46,12 @@ func main() {
 	infoLog.Print("Mailserver: ", SMTPD)
 	infoLog.Print("Sender: ", SENDER)
 
-	//showConfig := flag.Bool("c", false, "Show default configuration settings from configfile.")
 	fromPart := flag.String("f", SENDER, "email-sender.")
 	toPart := flag.String("t", SENDER, "email-recipient.")
 	subjectPart := flag.String("s", "(no subject)", "email-subject.")
 	bodyPart := flag.String("b", "(empty)", "email-body.")
 	attachPart := flag.String("a", "(none)", "email-attachments.")
 	flag.Parse()
-
-	//if *showConfig == true {
-	//	details()
-	//	os.Exit(3)
-	//}
 
 	if *subjectPart == "(no subject)" || *bodyPart == "(empty)" {
 		errorLog.Print("Sorry, I'm missing a mandatory parameter.")
