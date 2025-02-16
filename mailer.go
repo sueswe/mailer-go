@@ -92,8 +92,11 @@ func main() {
 			errorLog.Print("Attachments-Glob ist leer.")
 			os.Exit(3)
 		}
+
+		// folgende for wird nie erreicht wenn attachments ohnehin leer sind
+		// (deshalb auch ein os:exit bei der Prüfung zuvor).
+		// Macht nur Sinn, wenn während der Ausführung ein file verschwindet:
 		for i, fname := range filenames {
-			//log.Print(fname)
 			_, error := os.Stat(fname)
 			// check if error is "file not exists"
 			if os.IsNotExist(error) {
