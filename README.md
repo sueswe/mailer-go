@@ -9,4 +9,20 @@ written in go language.
  mailer -f sender -t recipient -s subject -b body/message [-a "attachments"]
 ~~~
 
+-r: (recipients):  foo@server,bar@domain
+-a: (attachments): one file, wildcards allowd, like filenam*
+
+
+## Config-file:
+
+requires: `$HOME/mailerconfig.toml`
+
+* Example:
+
+~~~sh
+[default]
+SMTPD = "localhost"
+SENDER = "sueswe@localhost"
+~~~
+
 .
