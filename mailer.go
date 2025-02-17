@@ -12,7 +12,7 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-var version string = "0.3.6"
+var version string = "0.3.7"
 
 var SMTPD string
 var SENDER string
@@ -21,7 +21,7 @@ var home string = os.Getenv("HOME")
 func help() {
 	fmt.Println("Usage: ")
 	fmt.Println("mailer [-f sender] [-t recipient,recipient] -s subject -m message [-a \"attachment*,attachment\"] ")
-	fmt.Println("\n -> use -h for more help.")
+	fmt.Println("(use -h for more help.)")
 }
 
 func main() {
@@ -72,8 +72,12 @@ func main() {
 	m.SetHeader("From", *fromPart)
 	m.SetHeader("To", addresses...)
 	m.SetHeader("Subject", *subjectPart)
-	m.SetBody("text/html", *bodyPart)
-	m.AddAlternative("text/html", "<br>-----<br><pre>(please reply to: "+SENDER+")</pre>")
+
+	// prepare the body:
+	defBody := *bodyPart + "<br>---<br><pre>(please reply to: " + SENDER + ")</pre>"
+
+	m.SetBody("text/html", defBody)
+	// m.AddAlternative("text/html", "<br>-----<br><pre>(please reply to: "+SENDER+")</pre>")
 
 	// Attachment-Parameter verarbeiten:
 	if *attachPart == "(none)" {
@@ -89,7 +93,7 @@ func main() {
 				os.Exit(2)
 			}
 			if len(filenames) == 0 {
-				errorLog.Print("Attachments-Glob ist leer.")
+				errorLog.Print("attachments not found.")
 				os.Exit(3)
 			}
 
