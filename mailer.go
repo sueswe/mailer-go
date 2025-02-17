@@ -45,7 +45,7 @@ func main() {
 	fromPart := flag.String("f", SENDER, "email-sender.")
 	toPart := flag.String("t", SENDER, "email-recipient.")
 	subjectPart := flag.String("s", "(no subject)", "email-subject.")
-	bodyPart := flag.String("b", "(empty)", "email-body.")
+	bodyPart := flag.String("m", "(empty)", "message-body.")
 	attachPart := flag.String("a", "(none)", "email-attachments.")
 	flag.Parse()
 
