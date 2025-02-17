@@ -12,7 +12,7 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-var version string = "0.3.5"
+var version string = "0.3.6"
 
 var SMTPD string
 var SENDER string
@@ -20,7 +20,7 @@ var home string = os.Getenv("HOME")
 
 func help() {
 	fmt.Println("Usage: ")
-	fmt.Println("mailer [-f sender] [-d] [-t recipient,recipient] -s subject -b message [-a \"attachment*,attachment\"] ")
+	fmt.Println("mailer [-f sender] [-t recipient,recipient] -s subject -m message [-a \"attachment*,attachment\"] ")
 	fmt.Println("\n -> use -h for more help.")
 }
 
@@ -72,7 +72,8 @@ func main() {
 	m.SetHeader("From", *fromPart)
 	m.SetHeader("To", addresses...)
 	m.SetHeader("Subject", *subjectPart)
-	m.SetBody("text/plain", *bodyPart)
+	m.SetBody("text/html", *bodyPart)
+	m.AddAlternative("text/html", "<br>-----<br><pre>(please reply to: "+SENDER+")</pre>")
 
 	// Attachment-Parameter verarbeiten:
 	if *attachPart == "(none)" {
@@ -95,14 +96,16 @@ func main() {
 			// folgende for wird nie erreicht wenn attachments ohnehin leer sind
 			// (deshalb auch ein os:exit bei der Prüfung zuvor).
 			// Macht nur Sinn, wenn während der Ausführung ein file verschwindet:
-			for i, fname := range filenames {
+			for _, fname := range filenames {
 				_, error := os.Stat(fname)
 				// check if error is "file not exists"
 				if os.IsNotExist(error) {
 					errorLog.Print("file does not exist: ", fname)
 					os.Exit(5)
 				}
-				infoLog.Print("Attaching file ", i, " ,is: ", fname)
+
+				// befuellen der Email mit Attachments:
+				infoLog.Print("Attaching file: ", fname)
 				m.Attach(fname)
 			}
 		}
