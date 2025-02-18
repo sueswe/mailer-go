@@ -17,7 +17,7 @@
   - -t: (recipients):  foo@server,bar@domain
   - -s: subject
   - -m: message-body
-  - -a: (attachments): files, commaseperated, wildcards allowed, like filenam*
+  - -a: (attachments): files, commaseparated, wildcards allowed, like filenam*
 
 
 ## Config-file:
