@@ -12,7 +12,7 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-var version string = "0.3.7"
+var version string = "0.3.8"
 
 var SMTPD string
 var SENDER string
@@ -74,7 +74,7 @@ func main() {
 	m.SetHeader("Subject", *subjectPart)
 
 	// prepare the body:
-	defBody := *bodyPart + "<br>---<br><pre>(please reply to: " + SENDER + ")</pre>"
+	defBody := *bodyPart + "<br>---<br><pre>(please reply to: " + SENDER + ". Made with GoLang and ❤️)</pre>"
 
 	m.SetBody("text/html", defBody)
 	// m.AddAlternative("text/html", "<br>-----<br><pre>(please reply to: "+SENDER+")</pre>")
