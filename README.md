@@ -10,9 +10,10 @@
 ## Usage:
 
 ~~~sh
- mailer [-f sender] -t recipient,recipient -s subject -m messagebody [-a "attachment_a,attachm*,attachment_c"]
+ mailer [-c] [-f sender] -t recipient,recipient -s subject -m messagebody [-a "attachment_a,attachm*,attachment_c"]
 ~~~
 
+  - -c: creates a configfile-template
   - -f: sender (optional)
   - -t: (recipients):  foo@server,bar@domain
   - -s: subject
