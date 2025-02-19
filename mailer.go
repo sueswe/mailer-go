@@ -12,16 +12,16 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-var version string = "0.4.0"
+var version string = "0.4.1"
 
 var SMTPD string
 var SENDER string
 var home string = os.Getenv("HOME")
 
 func help() {
-	fmt.Println("Usage: ")
-	fmt.Println("mailer [-f sender] -t recipient,recipient -s subject -m message [-a \"attachment*,attachment\"] ")
-	fmt.Println("(use -h for extended help.)")
+	//fmt.Println("Usage: ")
+	//fmt.Println("mailer [-f sender] -t recipient,recipient -s subject -m message [-a \"attachment*,attachment\"] ")
+	fmt.Println("Use -h for help.")
 }
 
 func createConfig() {
@@ -41,8 +41,8 @@ func main() {
 	infoLog.Print("mailer, Version ", version)
 
 	configPart := flag.Bool("c", false, "Optional: creates a default config file.")
-	fromPart := flag.String("f", SENDER, "email-sender.")
-	toPart := flag.String("t", SENDER, "email-recipient.")
+	fromPart := flag.String("f", SENDER, "email-sender. Default is taken from config.")
+	toPart := flag.String("t", SENDER, "email-recipients.")
 	subjectPart := flag.String("s", "(no subject)", "email-subject.")
 	bodyPart := flag.String("m", "(empty)", "message-body.")
 	attachPart := flag.String("a", "(none)", "email-attachments.")
