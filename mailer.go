@@ -12,7 +12,7 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-var version string = "0.3.9"
+var version string = "0.4.0"
 
 var SMTPD string
 var SENDER string
@@ -20,8 +20,16 @@ var home string = os.Getenv("HOME")
 
 func help() {
 	fmt.Println("Usage: ")
-	fmt.Println("mailer [-f sender] [-t recipient,recipient] -s subject -m message [-a \"attachment*,attachment\"] ")
-	fmt.Println("(use -h for more help.)")
+	fmt.Println("mailer [-f sender] -t recipient,recipient -s subject -m message [-a \"attachment*,attachment\"] ")
+	fmt.Println("(use -h for extended help.)")
+}
+
+func createConfig() {
+	infoLog := log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime)
+	if err := os.WriteFile(home+"/TEMPLATE.mailerconfig.toml", []byte("[default]\nSMTPD = \"localhost\"\nSENDER = \"user@domain.at\"\n"), 0640); err != nil {
+		log.Fatal(err)
+	}
+	infoLog.Print("writing " + home + "/TEMPLATE.mailerconfig.toml")
 }
 
 func main() {
@@ -31,6 +39,14 @@ func main() {
 	errorLog := log.New(os.Stderr, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
 
 	infoLog.Print("mailer, Version ", version)
+
+	configPart := flag.Bool("c", false, "Optional: creates a default config file.")
+	fromPart := flag.String("f", SENDER, "email-sender.")
+	toPart := flag.String("t", SENDER, "email-recipient.")
+	subjectPart := flag.String("s", "(no subject)", "email-subject.")
+	bodyPart := flag.String("m", "(empty)", "message-body.")
+	attachPart := flag.String("a", "(none)", "email-attachments.")
+	flag.Parse()
 
 	config, err := toml.LoadFile(home + "/.mailerconfig.toml")
 	if err != nil {
@@ -42,12 +58,11 @@ func main() {
 	infoLog.Print("Mailserver: ", SMTPD)
 	// infoLog.Print("Defaultsender: ", SENDER)
 
-	fromPart := flag.String("f", SENDER, "email-sender.")
-	toPart := flag.String("t", SENDER, "email-recipient.")
-	subjectPart := flag.String("s", "(no subject)", "email-subject.")
-	bodyPart := flag.String("m", "(empty)", "message-body.")
-	attachPart := flag.String("a", "(none)", "email-attachments.")
-	flag.Parse()
+	if *configPart == true {
+		infoLog.Print("creating config")
+		createConfig()
+		os.Exit(0)
+	}
 
 	if *subjectPart == "(no subject)" || *bodyPart == "(empty)" {
 		errorLog.Print("Sorry, I'm missing a mandatory parameter.")
