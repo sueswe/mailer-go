@@ -12,7 +12,7 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-var version string = "0.3.8"
+var version string = "0.3.9"
 
 var SMTPD string
 var SENDER string
@@ -32,7 +32,7 @@ func main() {
 
 	infoLog.Print("mailer, Version ", version)
 
-	config, err := toml.LoadFile(home + "/mailerconfig.toml")
+	config, err := toml.LoadFile(home + "/.mailerconfig.toml")
 	if err != nil {
 		errorLog.Print("Error ", err.Error())
 		panic(err)

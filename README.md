@@ -22,7 +22,7 @@
 
 ## Config-file:
 
-* Position: `$HOME/mailerconfig.toml`
+* Position: `$HOME/.mailerconfig.toml`
 
 * Examplecontent:
 
