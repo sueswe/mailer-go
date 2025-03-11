@@ -4,16 +4,13 @@
 
 > An mailer tool for the CLI written in go language.
 
-> [!IMPORTANT]
-> The project is in a process of heavy refactoring.
-
 ## Usage:
 
 ~~~sh
- mailer [-c] [-f sender] -t recipient,recipient -s subject -m messagebody [-a "attachment_a,attachm*,attachment_c"]
+ mailer [-c smtpd,name@mail.org] [-f sender] -t recipient,recipient -s subject -m messagebody [-a "attachment_a,attachm*,attachment_c"]
 ~~~
 
-  - -c: creates a configfile-template
+  - -c: creates a configfile
   - -f: sender (optional)
   - -t: (recipients):  foo@server,bar@domain
   - -s: subject
@@ -31,6 +28,12 @@
 [default]
 SMTPD = "localhost"
 SENDER = "sueswe@localhost"
+~~~
+
+## compile for AIX
+
+~~~sh
+GOOS=aix GOARCH=ppc64 go build -o mailer_aix
 ~~~
 
 .
