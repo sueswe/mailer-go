@@ -24,18 +24,18 @@ func help() {
 	fmt.Println("Use -h for help.")
 }
 
-func createConfig(server_address string)  {
+func createConfig(server_address string) {
 	infoLog := log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime)
 	s_a := strings.Split(server_address, ",")
 	host := s_a[0]
 	mail := s_a[1]
-	
-	if err := os.WriteFile(home+"/.mailerconfig.toml", []byte("[default]\nSMTPD = \""+ host + "\"\nSENDER = \"" + mail + "\"\n"), 0640); err != nil {
+
+	if err := os.WriteFile(home+"/.mailerconfig.toml", []byte("[default]\nSMTPD = \""+host+"\"\nSENDER = \""+mail+"\"\n"), 0640); err != nil {
 		log.Fatal(err)
 	}
 	infoLog.Print("writing " + home + "/.mailerconfig.toml")
 	infoLog.Print("Contains: ")
-	fmt.Println("[default]\nSMTPD = \""+ host + "\"\nSENDER = \"" + mail + "\"\n")
+	fmt.Println("[default]\nSMTPD = \"" + host + "\"\nSENDER = \"" + mail + "\"\n")
 }
 
 func main() {
@@ -47,7 +47,7 @@ func main() {
 	infoLog.Print("mailer, Version ", version)
 
 	//configPart := flag.Bool("c", false, "Optional: creates a default config file.")
-	configPart := flag.String("c", "localhost,empty" , "Create config with values.")
+	configPart := flag.String("c", "localhost,empty", "Create config with values.")
 	fromPart := flag.String("f", SENDER, "email-sender. Default is taken from config.")
 	toPart := flag.String("t", SENDER, "email-recipients.")
 	subjectPart := flag.String("s", "(no subject)", "email-subject.")
@@ -60,7 +60,7 @@ func main() {
 		createConfig(*configPart)
 		os.Exit(0)
 	}
-	
+
 	config, err := toml.LoadFile(home + "/.mailerconfig.toml")
 	if err != nil {
 		errorLog.Print("Error ", err.Error())
