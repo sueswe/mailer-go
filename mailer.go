@@ -12,7 +12,7 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-var version string = "0.4.1"
+var version string = "0.4.3"
 
 var SMTPD string
 var SENDER string
@@ -24,23 +24,30 @@ func help() {
 	fmt.Println("Use -h for help.")
 }
 
-func createConfig() {
+func createConfig(server_address string)  {
 	infoLog := log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime)
-	if err := os.WriteFile(home+"/TEMPLATE.mailerconfig.toml", []byte("[default]\nSMTPD = \"localhost\"\nSENDER = \"user@domain.at\"\n"), 0640); err != nil {
+	s_a := strings.Split(server_address, ",")
+	host := s_a[0]
+	mail := s_a[1]
+	
+	if err := os.WriteFile(home+"/.mailerconfig.toml", []byte("[default]\nSMTPD = \""+ host + "\"\nSENDER = \"" + mail + "\"\n"), 0640); err != nil {
 		log.Fatal(err)
 	}
-	infoLog.Print("writing " + home + "/TEMPLATE.mailerconfig.toml")
+	infoLog.Print("writing " + home + "/.mailerconfig.toml")
+	infoLog.Print("Contains: ")
+	fmt.Println("[default]\nSMTPD = \""+ host + "\"\nSENDER = \"" + mail + "\"\n")
 }
 
 func main() {
 
 	infoLog := log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime)
 	//warningLog := log.New(os.Stdout, "WARNING: ", log.Ldate|log.Ltime|log.Lshortfile)
-	errorLog := log.New(os.Stderr, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
+	errorLog := log.New(os.Stderr, "ERROR: ", log.Ldate|log.Ltime)
 
 	infoLog.Print("mailer, Version ", version)
 
-	configPart := flag.Bool("c", false, "Optional: creates a default config file.")
+	//configPart := flag.Bool("c", false, "Optional: creates a default config file.")
+	configPart := flag.String("c", "localhost,empty" , "Create config with values.")
 	fromPart := flag.String("f", SENDER, "email-sender. Default is taken from config.")
 	toPart := flag.String("t", SENDER, "email-recipients.")
 	subjectPart := flag.String("s", "(no subject)", "email-subject.")
@@ -48,21 +55,23 @@ func main() {
 	attachPart := flag.String("a", "(none)", "email-attachments.")
 	flag.Parse()
 
+	if strings.Contains(*configPart, "@") {
+		infoLog.Print("creating config")
+		createConfig(*configPart)
+		os.Exit(0)
+	}
+	
 	config, err := toml.LoadFile(home + "/.mailerconfig.toml")
 	if err != nil {
 		errorLog.Print("Error ", err.Error())
-		panic(err)
+		infoLog.Print("please run option -c .")
+		//createConfig(*configPart)
+		os.Exit(2)
 	}
 	SMTPD := config.Get("default.SMTPD").(string)
 	SENDER := config.Get("default.SENDER").(string)
 	infoLog.Print("Mailserver: ", SMTPD)
-	// infoLog.Print("Defaultsender: ", SENDER)
-
-	if *configPart == true {
-		infoLog.Print("creating config")
-		createConfig()
-		os.Exit(0)
-	}
+	infoLog.Print("Defaultsender: ", SENDER)
 
 	if *subjectPart == "(no subject)" || *bodyPart == "(empty)" {
 		errorLog.Print("Sorry, I'm missing a mandatory parameter.")
