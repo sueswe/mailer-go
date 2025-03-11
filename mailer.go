@@ -12,7 +12,7 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-var version string = "0.4.3"
+var version string = "0.4.4"
 
 var SMTPD string
 var SENDER string
@@ -78,7 +78,11 @@ func main() {
 		help()
 		os.Exit(2)
 	} else {
-		infoLog.Print("Sender: \t", *fromPart)
+		if len(*fromPart) == 0 {
+			infoLog.Print("Sender: \t", SENDER)
+		} else {
+			infoLog.Print("Sender: \t", *fromPart)
+		}
 		infoLog.Print("Recipient: \t", *toPart)
 		infoLog.Print("Subject: \t", *subjectPart)
 		infoLog.Print("Body: \t", *bodyPart)
