@@ -12,7 +12,7 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-var version string = "0.4.4"
+var version string = "0.4.5"
 
 var SMTPD string
 var SENDER string
@@ -35,7 +35,7 @@ func createConfig(server_address string) {
 	}
 	infoLog.Print("writing " + home + "/.mailerconfig.toml")
 	infoLog.Print("Contains: ")
-	fmt.Println("[default]\nSMTPD = \"" + host + "\"\nSENDER = \"" + mail + "\"\n")
+	fmt.Println("[default]\nSMTPD = \"" + host + "\"\nSENDER = \"" + mail + "\"\n\n")
 }
 
 func main() {
@@ -82,6 +82,7 @@ func main() {
 			infoLog.Print("Sender: \t", SENDER)
 		} else {
 			infoLog.Print("Sender: \t", *fromPart)
+			SENDER = *fromPart
 		}
 		infoLog.Print("Recipient: \t", *toPart)
 		infoLog.Print("Subject: \t", *subjectPart)
@@ -97,7 +98,7 @@ func main() {
 		addresses[i] = m.FormatAddress(adress, "")
 	}
 
-	m.SetHeader("From", *fromPart)
+	m.SetHeader("From", SENDER)
 	m.SetHeader("To", addresses...)
 	m.SetHeader("Subject", *subjectPart)
 
