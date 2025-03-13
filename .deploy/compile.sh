@@ -14,6 +14,9 @@ Returncode_check cd "$HOME"/compile/mailer-go
 echo "Status: $?"
 Returncode_check git pull origin master
 echo "Status: $?"
+echo ""
+ env | grep PATH
+echo ""
 Returncode_check go build mailer.go
 echo "Status: $?"
 Returncode_check GOOS=aix GOARCH=ppc64 go build -o mailer.aix
