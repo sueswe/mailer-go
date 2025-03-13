@@ -16,6 +16,7 @@ Returncode_check git pull origin master
 echo "Status: $?"
 echo ""
  env | grep PATH
+ env | grep LOADED
 echo ""
 Returncode_check go build mailer.go
 echo "Status: $?"
