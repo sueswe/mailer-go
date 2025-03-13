@@ -3,7 +3,7 @@
 source ~/.profile
 
 function Returncode_check {
-	time "$@"
+	"$@"
 	local status=$?
 	if ((status != 0)); then
 		echo "error with $1" >&2
