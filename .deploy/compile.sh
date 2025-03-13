@@ -2,43 +2,74 @@
 
 source ~/.profile
 
-function Returncode_check {
-	"$@"
-	local status=$?
-	if ((status != 0)); then
-		echo "error with $1" >&2
-		exit 5
-	fi
-	return $status	
+
+cd "$HOME"/compile/mailer-go || {
+	echo "Status: $?"
+	exit 4
 }
 
-Returncode_check cd "$HOME"/compile/mailer-go
-echo "Status: $?"
-Returncode_check git pull origin master
-echo "Status: $?"
+git pull origin master|| {
+	echo "Status: $?"
+	exit 4
+}
+
 echo "------------------------------------"
- env | grep PATH
- env | grep LOADED
+env | grep PATH
+env | grep LOADED
 echo "------------------------------------"
-Returncode_check go build mailer.go
-echo "Status: $?"
-Returncode_check GOOS=aix GOARCH=ppc64 go build -o mailer.aix
-echo "Status: $?"
-Returncode_check cd "$HOME"/temp/
-echo "Status: $?"
-Returncode_check rm -rf globaltools
-echo "Status: $?"
-Returncode_check git clone git@lvgom01.sozvers.at:repos/globaltools.git
-echo "Status: $?"
-Returncode_check cd globaltools
-echo "Status: $?"
-Returncode_check cp "$HOME"/compile/mailer-go/mailer .
-echo "Status: $?"
-Returncode_check cp "$HOME"/compile/mailer-go/mailer.aix .
-echo "Status: $?"
-Returncode_check git add .
-echo "Status: $?"
-Returncode_check git commit -m "recompiled mailer "
-echo "Status: $?"
-Returncode_check git push origin master
-echo "Status: $?"
+
+go build mailer.go|| {
+	echo "Status: $?"
+	exit 4
+}
+
+GOOS=aix GOARCH=ppc64 go build -o mailer.aix|| {
+	echo "Status: $?"
+	exit 4
+}
+
+cd "$HOME"/temp/|| {
+	echo "Status: $?"
+	exit 4
+}
+
+rm -rf globaltools|| {
+	echo "Status: $?"
+	exit 4
+}
+
+git clone git@lvgom01.sozvers.at:repos/globaltools.git|| {
+	echo "Status: $?"
+	exit 4
+}
+
+cd globaltools|| {
+	echo "Status: $?"
+	exit 4
+}
+
+cp "$HOME"/compile/mailer-go/mailer .  || {
+	echo "Status: $?"
+	exit 4
+}
+
+cp "$HOME"/compile/mailer-go/mailer.aix .  || {
+	echo "Status: $?"
+	exit 4
+}
+
+git add . || {
+	echo "Status: $?"
+	exit 4
+}
+
+git commit -m "recompiled mailer "  || {
+	echo "Status: $?"
+	exit 4
+}
+
+git push origin master || {
+	echo "Status: $?"
+	exit 4
+}
+
