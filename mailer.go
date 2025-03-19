@@ -12,7 +12,7 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-var version string = "0.4.5"
+var version string = "0.4.6"
 
 var SMTPD string
 var SENDER string
@@ -73,7 +73,7 @@ func main() {
 	infoLog.Print("Mailserver: ", SMTPD)
 	infoLog.Print("Defaultsender: ", SENDER)
 
-	if *subjectPart == "(no subject)" || *bodyPart == "(empty)" {
+	if *subjectPart == "(no subject)" || *bodyPart == "(empty)" || *bodyPart == "." {
 		errorLog.Print("Sorry, I'm missing a mandatory parameter.")
 		help()
 		os.Exit(2)
