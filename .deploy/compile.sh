@@ -41,7 +41,7 @@ GOOS=windows GOARCH=amd64 go build -o mailer.win64 || {
 
 
 echo ""
-cho "------------------------------------"
+echo "------------------------------------"
 echo ""
 
 cd "$HOME"/temp/|| {
