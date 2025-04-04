@@ -33,17 +33,25 @@ GOOS=aix GOARCH=ppc64 go build -o mailer.aix || {
 }
 
 echo ""
+echo "compiling: GOOS=windows GOARCH=amd64 go build -o mailer.win64"
+GOOS=windows GOARCH=amd64 go build -o mailer.win64 || {
+	echo "Status: $?"
+	exit 4
+}
+
+
+echo ""
+cho "------------------------------------"
+echo ""
 
 cd "$HOME"/temp/|| {
 	echo "Status: $?"
 	exit 4
 }
 
-rm -rf globaltools|| {
-	echo "Status: $?"
-	exit 4
-}
+rm -rf globaltools
 
+echo "cloning globaltools ..."
 git clone git@lvgom01.sozvers.at:repos/globaltools.git|| {
 	echo "Status: $?"
 	exit 4
@@ -63,6 +71,12 @@ cp -v "$HOME"/compile/mailer-go/mailer.aix .  || {
 	echo "Status: $?"
 	exit 4
 }
+
+cp -v "$HOME"/compile/mailer-go/mailer.win64 .  || {
+	echo "Status: $?"
+	exit 4
+}
+
 
 echo "git add ..."
 git add . || {
