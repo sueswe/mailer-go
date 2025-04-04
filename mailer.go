@@ -103,7 +103,7 @@ func main() {
 	m.SetHeader("Subject", *subjectPart)
 
 	// prepare the body:
-	defBody := *bodyPart + "<br>---<br><pre>(please reply to: " + SENDER + ". Made with GoLang and ❤️. Version " + version + ")</pre>"
+	defBody := *bodyPart + "<br>---<br><pre>(please reply to: " + SENDER + ". mailer built with GoLang and ❤️. Version " + version + ")</pre>"
 
 	m.SetBody("text/html", defBody)
 	// m.AddAlternative("text/html", "<br>-----<br><pre>(please reply to: "+SENDER+")</pre>")
