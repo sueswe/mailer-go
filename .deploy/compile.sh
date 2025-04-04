@@ -18,15 +18,21 @@ env | grep PATH
 env | grep LOADED
 echo "------------------------------------"
 
-go build mailer.go|| {
+echo ""
+echo "compiling: go build mailer.go"
+go build mailer.go || {
 	echo "Status: $?"
 	exit 4
 }
 
-GOOS=aix GOARCH=ppc64 go build -o mailer.aix|| {
+echo ""
+echo "compiling: GOOS=aix GOARCH=ppc64 go build -o mailer.aix"
+GOOS=aix GOARCH=ppc64 go build -o mailer.aix || {
 	echo "Status: $?"
 	exit 4
 }
+
+echo ""
 
 cd "$HOME"/temp/|| {
 	echo "Status: $?"
@@ -48,28 +54,33 @@ cd globaltools|| {
 	exit 4
 }
 
-cp "$HOME"/compile/mailer-go/mailer .  || {
+cp -v "$HOME"/compile/mailer-go/mailer .  || {
 	echo "Status: $?"
 	exit 4
 }
 
-cp "$HOME"/compile/mailer-go/mailer.aix .  || {
+cp -v "$HOME"/compile/mailer-go/mailer.aix .  || {
 	echo "Status: $?"
 	exit 4
 }
 
+echo "git add ..."
 git add . || {
 	echo "Status: $?"
 	exit 4
 }
 
+echo "git commit ..."
 git commit -m "recompiled mailer "  || {
 	echo "Status: $?"
 	exit 4
 }
 
+echo "git push ..."
 git push origin master || {
 	echo "Status: $?"
 	exit 4
 }
 
+echo ""
+echo "DONE!"
