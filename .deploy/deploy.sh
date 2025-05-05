@@ -43,9 +43,7 @@ echo '
 
 stages="
 stp,testta2
-lgkk,testta2
 stp,prodta2
-lgkk,prodta2
 "
 
 for UMG in ${stages}
