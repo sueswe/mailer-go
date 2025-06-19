@@ -1,2 +1,4 @@
 mailer
 *.exe
+mailer2.pl
+sendmail
