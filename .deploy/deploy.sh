@@ -35,6 +35,23 @@ do
 done
 
 
+stages="
+hema,test
+hema,prod
+"
+
+for UMG in ${stages}
+do
+    cd /tmp/ || exit 1
+    "$HOME"/bin/vicecersa.sh ${UMG} mailer /hemanfs/hemabat/ || {
+        echo "Status: $?"
+        exit 2
+    }
+done
+
+
+
+
 echo '
 
 ### AIX #########################################################
