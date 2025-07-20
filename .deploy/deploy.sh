@@ -36,7 +36,7 @@ done
 
 
 stages="
-hema,test
+hema,test,01T
 hema,prod
 "
 
