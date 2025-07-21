@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"log"
@@ -12,7 +13,7 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-var version string = "0.4.7"
+var version string = "0.4.8"
 
 var SMTPD string
 var SENDER string
@@ -38,6 +39,27 @@ func createConfig(server_address string) {
 	fmt.Println("[default]\nSMTPD = \"" + host + "\"\nSENDER = \"" + mail + "\"\n\n")
 }
 
+func readConfig(cf string) int {
+	file, err := os.Open(cf)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	fmt.Println("$> " + cf + ": ")
+	fmt.Println("")
+	for scanner.Scan() {
+		fmt.Println(scanner.Text())
+	}
+
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
+	}
+	return 0
+}
+
 func main() {
 
 	infoLog := log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime)
@@ -47,17 +69,23 @@ func main() {
 	infoLog.Print("mailer, Version ", version)
 
 	//configPart := flag.Bool("c", false, "Optional: creates a default config file.")
-	configPart := flag.String("c", "localhost,empty", "Create config with values.")
+	configPart := flag.String("c", "localhost,nobody<at>nowhere.org", "Create configfile with values.")
 	fromPart := flag.String("f", SENDER, "email-sender. Default is taken from config.")
 	toPart := flag.String("t", SENDER, "email-recipients.")
 	subjectPart := flag.String("s", "(no subject)", "email-subject.")
 	bodyPart := flag.String("m", "(empty)", "message-body.")
 	attachPart := flag.String("a", "(none)", "email-attachments.")
+	readConfigPart := flag.Bool("r", false, "view configfile.")
 	flag.Parse()
 
 	if strings.Contains(*configPart, "@") {
 		infoLog.Print("creating config")
 		createConfig(*configPart)
+		os.Exit(0)
+	}
+
+	if *readConfigPart {
+		readConfig(home + "/.mailerconfig.toml")
 		os.Exit(0)
 	}
 
