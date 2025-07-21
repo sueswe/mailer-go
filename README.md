@@ -11,6 +11,7 @@
 ~~~
 
   - -c: creates a configfile
+  - -r: view configilfe
   - -f: sender (optional)
   - -t: (recipients):  foo@server,bar@domain
   - -s: subject
